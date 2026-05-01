@@ -32,29 +32,29 @@ A full-stack task management web application where users can create projects, as
 
 ---
 
-##  Project Structure
+## 📁 Project Structure
+
+```
 Team_Task_Manager/
 │
 ├── backend/
-│ ├── config/
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── server.js
-│ ├── package.json
+│   ├── config/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── server.js
+│   ├── package.json
 │
 ├── frontend/
-│ ├── index.html
-│ ├── signup.html
-│ ├── dashboard.html
-│ ├── script.js
-│ ├── style.css
+│   ├── index.html
+│   ├── signup.html
+│   ├── dashboard.html
+│   ├── script.js
+│   ├── style.css
 │
 ├── .gitignore
 ├── README.md
-
-
----
+```
 
 ##  How to Run Locally
 
