@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · Team Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="dashboard-page" onload="loadData()">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">TT</div>
+        <h1 class="brand-title">Team Task Manager</h1>
+      </div>
+      <span class="badge-pill">Workspace</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid-2">
+
+      <div class="section section-mint">
+        <div class="section-head">
+          <span class="section-emoji">📁</span>
+          <h3>Create Project</h3>
+        </div>
+        <input type="text" id="projectTitle" placeholder="Project title — e.g. Marketing Sprint" />
+        <button class="btn btn-primary" onclick="createProject()">+ Create Project</button>
+        <p id="currentProject" class="hint"></p>
+      </div>
+
+      <div class="section section-lavender">
+        <div class="section-head">
+          <span class="section-emoji">✅</span>
+          <h3>Create Task</h3>
+        </div>
+        <select id="projectSelect"></select>
+        <input type="text" id="taskTitle" placeholder="Task title" />
+        <input type="text" id="assignedTo" placeholder="Assign to (name)" />
+        <button class="btn btn-secondary" onclick="createTask()">+ Add Task</button>
+      </div>
+
+    </div>
+
+    <div class="section section-peach">
+      <div class="section-head between">
+        <div class="section-head">
+          <span class="section-emoji">🗂️</span>
+          <h3>Projects & Tasks</h3>
+        </div>
+        <button class="btn btn-ghost" onclick="loadData()">↻ Refresh</button>
+      </div>
+
+      <div id="projectContainer" class="project-grid"></div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
