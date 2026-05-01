@@ -239,6 +239,21 @@ button:hover { transform: translateY(-1px); }
   font-size: .85rem;
   margin: 18px 0 0;
 }
+/* ====== Sign Up Page ====== */
+
+.login-card input {
+  margin-bottom: 10px;
+}
+
+.login-card a {
+  color: #6c5ce7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
 
 /* ====== Hint text ====== */
 .hint {

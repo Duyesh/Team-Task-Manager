@@ -3,6 +3,8 @@ const BASE_URL = "http://localhost:5000";
 let projects = [];
 let tasks = [];
 
+// ================= AUTH =================
+
 // LOGIN
 async function login() {
   const email = document.getElementById("email").value;
@@ -22,39 +24,51 @@ async function login() {
   }
 }
 
-// CREATE PROJECT
+// SIGNUP
+async function signup() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password })
+  });
+
+  if (res.ok) {
+    alert("Signup successful");
+    window.location.href = "index.html";
+  } else {
+    const data = await res.json();
+    alert(data.message || "Signup failed");
+  }
+}
+
+// ================= PROJECT =================
+
 async function createProject() {
   const title = document.getElementById("projectTitle").value;
 
-  const res = await fetch(`${BASE_URL}/api/projects/create`, {
+  await fetch(`${BASE_URL}/api/projects/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title,
-      createdBy: "Duyesh"
-    })
+    body: JSON.stringify({ title, createdBy: "Duyesh" })
   });
-
-  await res.json();
-  alert("Project created");
 
   loadData();
 }
 
-// POPULATE DROPDOWN
-function populateProjects() {
-  const select = document.getElementById("projectSelect");
-  select.innerHTML = "";
-
-  projects.forEach(project => {
-    const option = document.createElement("option");
-    option.value = project._id;
-    option.textContent = project.title;
-    select.appendChild(option);
+async function deleteProject(id) {
+  await fetch(`${BASE_URL}/api/projects/delete/${id}`, {
+    method: "DELETE"
   });
+
+  loadData();
 }
 
-// CREATE TASK
+// ================= TASK =================
+
 async function createTask() {
   const projectId = document.getElementById("projectSelect").value;
 
@@ -72,11 +86,9 @@ async function createTask() {
     body: JSON.stringify({ title, projectId, assignedTo })
   });
 
-  alert("Task created");
   loadData();
 }
 
-// DELETE TASK
 async function deleteTask(id) {
   await fetch(`${BASE_URL}/api/tasks/delete/${id}`, {
     method: "DELETE"
@@ -85,92 +97,6 @@ async function deleteTask(id) {
   loadData();
 }
 
-// DELETE PROJECT 
-async function deleteProject(id) {
-  await fetch(`${BASE_URL}/api/projects/delete/${id}`, {
-    method: "DELETE"
-  });
-
-  loadData();
-}
-
-// LOAD DATA
-async function loadData() {
-  try {
-    const projectRes = await fetch(`${BASE_URL}/api/projects`);
-    const taskRes = await fetch(`${BASE_URL}/api/tasks`);
-
-    projects = await projectRes.json();
-    tasks = await taskRes.json();
-
-    populateProjects();
-    display();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to load data");
-  }
-}
-
-// DISPLAY PROJECTS + TASKS
-function display() {
-  const container = document.getElementById("projectContainer");
-  container.innerHTML = "";
-
-  projects.forEach(project => {
-    const div = document.createElement("div");
-
-    div.innerHTML = `
-        <h4>${project.title}</h4>
-        <button onclick="deleteProject('${project._id}')">
-            Delete Project
-        </button>
-    `;
-
-    const ul = document.createElement("ul");
-
-    const projectTasks = tasks.filter(
-      t => t.projectId === project._id
-    );
-
-    projectTasks.forEach(task => {
-      const li = document.createElement("li");
-
-      const isCompleted = task.status === "completed";
-      const statusColor = isCompleted ? "green" : "orange";
-      const buttonText = isCompleted ? "Mark Pending" : "Mark Complete";
-
-      li.innerHTML = `
-        <span style="color:${statusColor}; font-size:18px;">●</span>
-        <strong>${task.title}</strong> (${task.status})
-        <br>
-        Assigned: ${task.assignedTo}
-        <br>
-        Comment: ${task.comment || "None"}
-        <br><br>
-
-        <button onclick="toggleStatus('${task._id}', '${task.status}')">
-          ${buttonText}
-        </button>
-
-        <button onclick="deleteTask('${task._id}')">
-          Delete
-        </button>
-
-        <br><br>
-
-        <input placeholder="Add comment" id="c-${task._id}">
-        <button onclick="addComment('${task._id}')">Save</button>
-      `;
-
-      ul.appendChild(li);
-    });
-
-    div.appendChild(ul);
-    container.appendChild(div);
-  });
-}
-
-// TOGGLE STATUS
 async function toggleStatus(id, currentStatus) {
   const newStatus = currentStatus === "completed" ? "pending" : "completed";
 
@@ -183,7 +109,6 @@ async function toggleStatus(id, currentStatus) {
   loadData();
 }
 
-// ADD COMMENT
 async function addComment(id) {
   const comment = document.getElementById(`c-${id}`).value;
 
@@ -194,4 +119,88 @@ async function addComment(id) {
   });
 
   loadData();
+}
+
+// ================= LOAD =================
+
+async function loadData() {
+  const projectRes = await fetch(`${BASE_URL}/api/projects`);
+  const taskRes = await fetch(`${BASE_URL}/api/tasks`);
+
+  projects = await projectRes.json();
+  tasks = await taskRes.json();
+
+  populateProjects();
+  display();
+}
+
+function populateProjects() {
+  const select = document.getElementById("projectSelect");
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  projects.forEach(project => {
+    const option = document.createElement("option");
+    option.value = project._id;
+    option.textContent = project.title;
+    select.appendChild(option);
+  });
+}
+
+// ================= UI =================
+
+function display() {
+  const container = document.getElementById("projectContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  projects.forEach(project => {
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      <h4>
+        ${project.title}
+        <button onclick="deleteProject('${project._id}')">Delete</button>
+      </h4>
+    `;
+
+    const ul = document.createElement("ul");
+
+    const projectTasks = tasks.filter(
+      t => t.projectId === project._id
+    );
+
+    projectTasks.forEach(task => {
+      const li = document.createElement("li");
+
+      const isCompleted = task.status === "completed";
+      const color = isCompleted ? "green" : "orange";
+      const text = isCompleted ? "Mark Pending" : "Mark Complete";
+
+      li.innerHTML = `
+        <span style="color:${color}">●</span>
+        <strong>${task.title}</strong>
+        <br>
+        Assigned: ${task.assignedTo}
+        <br>
+        Comment: ${task.comment || "None"}
+        <br><br>
+
+        <button onclick="toggleStatus('${task._id}', '${task.status}')">${text}</button>
+        <button onclick="deleteTask('${task._id}')">Delete</button>
+
+        <br><br>
+
+        <input id="c-${task._id}" placeholder="Add comment">
+        <button onclick="addComment('${task._id}')">Save</button>
+      `;
+
+      ul.appendChild(li);
+    });
+
+    div.appendChild(ul);
+    container.appendChild(div);
+  });
 }

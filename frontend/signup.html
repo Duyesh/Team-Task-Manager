@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup · Team Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="login-page">
+
+  <div class="login-wrapper">
+    <div class="login-card">
+
+      <div class="brand">
+        <div class="brand-logo">TT</div>
+        <h1 class="brand-title">Team Task Manager</h1>
+      </div>
+
+      <h2 class="login-title">Create Account 🚀</h2>
+      <p class="login-sub">Join your team and start managing tasks.</p>
+
+      <!-- NAME -->
+      <label class="field-label">Name</label>
+      <div class="input-wrap">
+        <span class="input-icon">
+          👤
+        </span>
+        <input type="text" id="name" placeholder="Your name" />
+      </div>
+
+      <!-- EMAIL -->
+      <label class="field-label">Email</label>
+      <div class="input-wrap">
+        <span class="input-icon">
+          📧
+        </span>
+        <input type="email" id="email" placeholder="you@team.com" />
+      </div>
+
+      <!-- PASSWORD -->
+      <label class="field-label">Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">
+          🔒
+        </span>
+        <input type="password" id="password" placeholder="••••••••" />
+      </div>
+
+      <button class="btn btn-primary btn-block" onclick="signup()">
+        Create Account
+      </button>
+
+      <p class="login-foot">
+        Already have an account?
+        <a href="index.html">Login</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
