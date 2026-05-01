@@ -1,38 +1,43 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-
-// load env variables
-dotenv.config();
-
-// connect database
-connectDB();
+require("dotenv").config();
 
 const app = express();
 
-// middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// routes
+// Routes
 const authRoutes = require("./routes/authRoutes");
-const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-app.use("/api/auth", authRoutes);
-app.use("/api/projects", projectRoutes);
-app.use("/api/projects", projectRoutes);
-app.use("/api/tasks", taskRoutes);
+const projectRoutes = require("./routes/projectRoutes");
 
-// test route
+app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/projects", projectRoutes);
+
+// Root route (for testing)
 app.get("/", (req, res) => {
-  res.send("Server is running 🚀");
+  res.send("Server is running");
 });
 
-// port
+// DB Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error("DB Error:", err));
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error("ERROR:", err);
+  res.status(500).json({ message: err.message || "Server error" });
+});
+
+// Start server
 const PORT = process.env.PORT || 5000;
 
-// start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
