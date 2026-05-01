@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://team-task-manager-production-7a1c.up.railway.app";
 
 let projects = [];
 let tasks = [];
